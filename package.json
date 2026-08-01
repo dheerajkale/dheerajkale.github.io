@@ -1,0 +1,28 @@
+{
+    "name": "dheerajkale.github.io",
+    "version": "1.0.0",
+    "description": "A minimalistic resume website",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview"
+    },
+    "author": "prathamkundan@gmail.com",
+    "license": "ISC",
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.3.3",
+        "@types/node": "^26.1.2",
+        "@types/react-dom": "^19.2.4",
+        "@vitejs/plugin-react": "^6.0.5",
+        "autoprefixer": "^10.5.4",
+        "postcss": "^8.5.25",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^7.0.2",
+        "vite": "^8.2.0"
+    },
+    "dependencies": {
+        "lucide-react": "^1.28.0",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8"
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "lsp": {
+    "enabled": true,
+    "languages": {
+      "javascript": "typescript-language-server",
+      "typescript": "typescript-language-server",
+      "html": "vscode-html-lsp",
+      "css": "vscode-css-languageserver",
+      "json": "vscode-json-languageserver"
+    }
+  }
+}

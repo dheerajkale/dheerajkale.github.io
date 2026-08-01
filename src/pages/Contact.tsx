@@ -32,7 +32,7 @@ export function ContactIcon({ icon }: { icon: LucideIcon }) {
 export default function Contact() {
     return (
         <div className="h-auto w-screen bg-white text-black flex flex-col items-center justify-center px-5 py-12">
-            <h1 className="text-3xl font-semibold mb-8">Get In Touch</h1>
+            <h1 className="text-4xl mb-8 lg:mb-3">Get In Touch</h1>
             <div className="flex gap-4">
                 <ContactChips
                     label="Email"

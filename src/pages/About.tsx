@@ -1,4 +1,5 @@
 import ProfileImage from '../components/ProfileImage';
+import profilePhoto from '../assets/about/profile.jpeg';
 
 export default function About() {
     return (
@@ -9,7 +10,7 @@ export default function About() {
                 {/* Image section */}
                 <div className="flex items-center justify-center w-full lg:w-1/3 ">
                     <ProfileImage
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
+                        src={profilePhoto}
                         alt="Profile"
                     />
                 </div>

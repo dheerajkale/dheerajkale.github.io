@@ -1,124 +1,190 @@
 import React from 'react';
-import type { GallerySection, Document } from '../types/gallery';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { DocumentPreview, DocumentViewer } from '../components/gallery/DocumentViewer';
+import { buildGalleryConfig } from '../utils/galleryConfig';
+import type { Document } from '../types/gallery';
+
+const AUTO_CYCLE_MS = 5500;
+const galleryConfig = buildGalleryConfig();
+
+function SectionArrow({
+    direction,
+    onClick,
+    label,
+}: {
+    direction: 'prev' | 'next';
+    onClick: () => void;
+    label: string;
+}) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            aria-label={label}
+            className="shrink-0 p-2 text-black/25 transition hover:text-black"
+        >
+            {direction === 'prev' ? (
+                <ChevronLeft className="h-7 w-7" strokeWidth={1.25} />
+            ) : (
+                <ChevronRight className="h-7 w-7" strokeWidth={1.25} />
+            )}
+        </button>
+    );
+}
 
 export default function Gallery() {
-  const sections: GallerySection[] = [
-    {
-      title: 'Projects',
-      documents: [
-        { src: '/assets/project1.jpg', description: 'Project one description' },
-        { src: '/assets/project2.png', description: 'Project two description' },
-      ],
-    },
-    {
-      title: 'Work Samples',
-      documents: [
-        { src: '/assets/sample1.jpg', description: 'Sample work one' },
-      ],
-    },
-    {
-      title: 'Portfolio',
-      documents: [],
-    },
-  ];
+    const sections = galleryConfig.sections;
 
-  const [current, setCurrent] = React.useState(0);
-  const [openDoc, setOpenDoc] = React.useState<Document | null>(null);
+    const [sectionIndex, setSectionIndex] = React.useState(0);
+    const [docIndex, setDocIndex] = React.useState(0);
+    const [autoCycle, setAutoCycle] = React.useState(true);
+    const [openDoc, setOpenDoc] = React.useState<Document | null>(null);
 
-  const next = () =>
-    setCurrent((prev) => (prev + 1) % sections.length);
+    const sectionIndexRef = React.useRef(sectionIndex);
+    const docIndexRef = React.useRef(docIndex);
+    sectionIndexRef.current = sectionIndex;
+    docIndexRef.current = docIndex;
 
-  const prev = () =>
-    setCurrent((prev) => (prev - 1 + sections.length) % sections.length);
+    const activeSection = sections[sectionIndex]!;
+    const documents = activeSection.documents ?? [];
+    const activeDoc = documents[docIndex];
+    const hasSections = sections.length > 0;
+    const hasMultipleSections = sections.length > 1;
+    const hasMultipleDocs = documents.length > 1;
+    const canAutoCycle =
+        hasMultipleSections || sections.some((section) => section.documents.length > 1);
 
-  return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center px-5 py-12 bg-white text-black">
-      <h1 className="text-3xl font-semibold mb-8 text-center">Gallery</h1>
+    const goToSection = (index: number) => {
+        setSectionIndex(index);
+        setDocIndex(0);
+    };
 
-      <div className="flex gap-4 mb-8">
-        <button
-          onClick={prev}
-          className="px-4 py-2 border border-black rounded hover:bg-black hover:text-white transition"
-        >
-          ← Prev
-        </button>
-        <button
-          onClick={next}
-          className="px-4 py-2 border border-black rounded hover:bg-black hover:text-white transition"
-        >
-          Next →
-        </button>
-      </div>
+    const nextSection = () => goToSection((sectionIndex + 1) % sections.length);
+    const prevSection = () => goToSection((sectionIndex - 1 + sections.length) % sections.length);
 
-      <div className="w-full max-w-9/12 flex flex-col gap-4">
-        {sections.map((section, index) => (
-          <section
-            key={index}
-            className={`border rounded p-6 flex flex-col gap-4 transition ${
-              index === current ? 'border-black bg-black/5' : 'border-gray-300'
-            }`}
-          >
-            <h2 className="text-xl font-semibold">{section.title}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {section.documents.map((doc, docIndex) => (
-                <div key={docIndex} className="border rounded p-4 flex flex-col items-center gap-2">
-                  <img
-                    src={doc.src}
-                    alt={section.title}
-                    className="max-w-full h-auto max-h-40 object-contain"
-                  />
-                  {doc.description && (
-                    <p className="text-sm text-center text-gray-600">
-                      {doc.description}
-                    </p>
-                  )}
+    React.useEffect(() => {
+        setDocIndex(0);
+    }, [sectionIndex]);
+
+    React.useEffect(() => {
+        if (!autoCycle || openDoc || !canAutoCycle) return;
+
+        const timer = window.setInterval(() => {
+            const si = sectionIndexRef.current;
+            const di = docIndexRef.current;
+            const sectionDocs = sections[si]?.documents ?? [];
+
+            if (sectionDocs.length === 0) {
+                if (sections.length > 1) {
+                    setSectionIndex((si + 1) % sections.length);
+                    setDocIndex(0);
+                }
+                return;
+            }
+
+            if (di < sectionDocs.length - 1) {
+                setDocIndex(di + 1);
+                return;
+            }
+
+            if (sections.length > 1) {
+                setSectionIndex((si + 1) % sections.length);
+                setDocIndex(0);
+            } else {
+                setDocIndex(0);
+            }
+        }, AUTO_CYCLE_MS);
+
+        return () => window.clearInterval(timer);
+    }, [autoCycle, openDoc, canAutoCycle, sections]);
+
+    const viewerDocIndex = openDoc ? documents.findIndex((d) => d.src === openDoc.src) : -1;
+
+    return (
+        <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-white text-black">
+            <header className="mb-16 text-center">
+                <h1 className="text-3xl">Gallery</h1>
+            </header>
+
+            {!hasSections ? (
+                <p className="text-black/40">No gallery items yet.</p>
+            ) : (
+                <div className="w-full max-w-10/12">
+
+                    <div className="flex items-center gap-2 sm:gap-6">
+                        {hasMultipleSections && (
+                            <SectionArrow direction="prev" onClick={prevSection} label="Previous section" />
+                        )}
+
+                        <div className="min-w-0 flex-1">
+                            {activeDoc ? (
+                                <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-16">
+                                    <div className="flex h-52 w-full items-center justify-center">
+                                        <div
+                                            key={`${sectionIndex}-${docIndex}`}
+                                            className="flex h-full w-full items-center justify-center animate-[fadeIn_0.4s_ease-out]"
+                                        >
+                                            <DocumentPreview document={activeDoc} onOpen={() => setOpenDoc(activeDoc)} />
+                                        </div>
+                                    </div>
+                                    <div className="md:pt-2">
+                                        <h2 className="text-3xl">{activeSection.title}</h2>
+                                        {activeSection.description ? (
+                                            <p className="text-xl leading-relaxed text-black/50">{activeSection.description}</p>
+                                        ) : (
+                                            <p className="text-sm text-black/30">No description available.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-black/40">This section has no documents yet.</p>
+                            )}
+                        </div>
+
+                        {hasMultipleSections && (
+                            <SectionArrow direction="next" onClick={nextSection} label="Next section" />
+                        )}
+                    </div>
+                    <div className="mt-8 flex flex-col gap-2 items-center justify-center">
+                        <div>
+                            {hasMultipleSections && (
+                                <p className="mb-1 text-sm text-black/40"> {sectionIndex + 1} / {sections.length} </p>
+                            )}
+                        </div>
+
+                        <div>
+                            {canAutoCycle && (
+                                <button
+                                    type="button"
+                                    onClick={() => setAutoCycle((prev) => !prev)}
+                                    className="items-center gap-2 self-start text-xl text-black/40 transition hover:text-black"
+                                >
+                                    {autoCycle ? <Pause className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Play className="h-3.5 w-3.5" strokeWidth={1.5} />}
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-
-      {/* Active section indicator */}
-      <div className="mt-4 flex gap-2">
-        {sections.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`w-3 h-3 rounded-full transition ${
-              i === current ? 'bg-black' : 'bg-gray-300'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Document viewer */}
-      {openDoc && (
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-          onClick={() => setOpenDoc(null)}
-        >
-          <div
-            className="relative bg-white p-6 rounded max-w-4xl w-11/12 max-h-[90vh] overflow-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setOpenDoc(null)}
-              className="absolute top-4 right-4 text-2xl font-bold"
-            >
-              ×
-            </button>
-            <img
-              src={openDoc.src}
-              alt="Full view"
-              className="max-w-full h-auto max-h-[80vh] object-contain"
-            />
-            {openDoc.description && (
-              <p className="mt-4 text-gray-600">{openDoc.description}</p>
             )}
-          </div>
+
+            {openDoc && viewerDocIndex >= 0 && (
+                <DocumentViewer
+                    document={openDoc}
+                    onClose={() => setOpenDoc(null)}
+                    onPrev={() => {
+                        const newIndex = (viewerDocIndex - 1 + documents.length) % documents.length;
+                        setDocIndex(newIndex);
+                        setOpenDoc(documents[newIndex]!);
+                    }}
+                    onNext={() => {
+                        const newIndex = (viewerDocIndex + 1) % documents.length;
+                        setDocIndex(newIndex);
+                        setOpenDoc(documents[newIndex]!);
+                    }}
+                    hasPrev={hasMultipleDocs}
+                    hasNext={hasMultipleDocs}
+                />
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }

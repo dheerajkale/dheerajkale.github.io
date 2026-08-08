@@ -67,8 +67,8 @@ function enrichDocument(relativePath: string, doc: Document, markdownLookup: Map
 
     return {
         ...doc,
-        title: meta.title ?? doc.title,
-        description: meta.body || doc.description,
+        ...(meta.title !== undefined ? { title: meta.title } : {}),
+        ...(meta.body ? { description: meta.body } : {}),
     };
 }
 
@@ -79,8 +79,8 @@ function enrichSection(dir: string, section: GallerySection, markdownLookup: Map
 
     return {
         ...section,
-        title: sectionMeta.title ?? section.title,
-        description: sectionMeta.body || section.description,
+        ...(sectionMeta.title !== undefined ? { title: sectionMeta.title } : {}),
+        ...(sectionMeta.body ? { description: sectionMeta.body } : {}),
     };
 }
 

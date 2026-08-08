@@ -36,11 +36,14 @@ export function parseMarkdown(raw: string): ParsedMarkdown {
     if (!match) continue;
 
     const [, key, value] = match;
-    frontmatter[key] = parseFrontmatterValue(value);
+    if (key !== undefined && value !== undefined) {
+      frontmatter[key] = parseFrontmatterValue(value);
+    }
   }
 
+  const title = frontmatter.title;
   return {
-    title: frontmatter.title,
+    ...(title !== undefined ? { title } : {}),
     body,
     frontmatter,
   };

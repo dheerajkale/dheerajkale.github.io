@@ -25,8 +25,8 @@ function toExpItem(relativePath: string, raw: string): ExpItem {
     return {
         title: parsed.title ?? basename(relativePath),
         company: frontmatter.company ?? '',
-        period: frontmatter.period,
-        description: parsed.body || undefined,
+        ...(frontmatter.period !== undefined ? { period: frontmatter.period } : {}),
+        ...(parsed.body ? { description: parsed.body } : {}),
     };
 }
 

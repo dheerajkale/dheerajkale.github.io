@@ -1,6 +1,8 @@
-import { ArrowUpRight, ChevronLeft, ChevronRight, FileText, X } from 'lucide-react';
+import { useEffect } from 'react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { Document } from '../../types/gallery';
 import { DocumentThumbnail } from './DocumentThumbnail';
+import { PdfPagesViewer } from './PdfPagesViewer';
 
 interface DocumentViewerProps {
     document: Document;
@@ -11,27 +13,6 @@ interface DocumentViewerProps {
     hasNext?: boolean;
 }
 
-function PdfPresentation({ document }: { document: Document }) {
-    return (
-        <div className="flex max-w-md flex-col items-center text-center">
-            <FileText className="mb-6 h-12 w-12 text-white/25" strokeWidth={1} />
-            {document.title && <h3 className="mb-3 text-2xl text-white sm:text-3xl">{document.title}</h3>}
-            {document.description && (
-                <p className="mb-8 text-base leading-relaxed text-white/55">{document.description}</p>
-            )}
-            <a
-                href={document.src}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-2 text-sm text-white/70 transition hover:text-white"
-            >
-                Open PDF in new tab
-                <ArrowUpRight className="h-4 w-4" />
-            </a>
-        </div>
-    );
-}
-
 export function DocumentViewer({
     document,
     onClose,
@@ -40,6 +21,16 @@ export function DocumentViewer({
     hasPrev = false,
     hasNext = false,
 }: DocumentViewerProps) {
+    useEffect(() => {
+        const previousOverflow = window.document.documentElement.style.overflow;
+        window.document.documentElement.style.overflow = 'hidden';
+        window.document.body.style.overflow = 'hidden';
+        return () => {
+            window.document.documentElement.style.overflow = previousOverflow;
+            window.document.body.style.overflow = previousOverflow;
+        };
+    }, []);
+
     return (
         <div
             className="fixed inset-0 z-50 flex flex-col bg-black/92"
@@ -60,7 +51,7 @@ export function DocumentViewer({
             </div>
 
             <div
-                className="relative flex flex-1 items-center justify-center px-6 sm:px-16"
+                className="relative flex min-h-0 flex-1 items-center justify-center px-6 sm:px-16"
                 onClick={(e) => e.stopPropagation()}
             >
                 {hasPrev && onPrev && (
@@ -74,16 +65,18 @@ export function DocumentViewer({
                     </button>
                 )}
 
-                <div className="flex max-h-[75vh] w-full max-w-5xl flex-col items-center justify-center">
+                <div className="flex max-h-full w-full max-w-4xl flex-col">
                     {document.type === 'image' ? (
                         <>
-                            <img
-                                src={document.src}
-                                alt={document.title ?? 'Gallery image'}
-                                className="max-h-[60vh] w-auto max-w-full object-contain"
-                            />
+                            <div className="flex min-h-0 items-center justify-center">
+                                <img
+                                    src={document.src}
+                                    alt={document.title ?? 'Gallery image'}
+                                    className="max-h-[60vh] w-auto max-w-full object-contain"
+                                />
+                            </div>
                             {(document.title || document.description) && (
-                                <div className="mt-8 max-w-xl text-center">
+                                <div className="mt-8 max-w-xl self-center text-center">
                                     {document.title && <p className="mb-2 text-lg text-white/90">{document.title}</p>}
                                     {document.description && (
                                         <p className="text-sm leading-relaxed text-white/45">{document.description}</p>
@@ -92,7 +85,29 @@ export function DocumentViewer({
                             )}
                         </>
                     ) : (
-                        <PdfPresentation document={document} />
+                        <div className="flex min-h-0 max-h-screen flex-1 flex-col overflow-hidden rounded-lg bg-white/[0.03]">
+                            <div className="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
+                                <div className="min-w-0">
+                                    {document.title ? (
+                                        <h3 className="truncate text-lg text-white/90">{document.title}</h3>
+                                    ) : (
+                                        <h3 className="text-lg text-white/90">PDF document</h3>
+                                    )}
+                                </div>
+                                <a
+                                    href={document.src}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex shrink-0 items-center gap-1.5 text-sm text-white/60 transition hover:text-white"
+                                >
+                                    Open
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </a>
+                            </div>
+                            <div className="min-h-0 max-h-screen flex-1 overflow-y-auto px-6 py-6">
+                                <PdfPagesViewer document={document} />
+                            </div>
+                        </div>
                     )}
                 </div>
 

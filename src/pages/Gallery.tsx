@@ -119,7 +119,7 @@ export default function Gallery() {
                         <div className="min-w-0 flex-1">
                             {activeDoc ? (
                                 <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-2 md:gap-16">
-                                    <div className="flex h-52 w-full items-center justify-center">
+                                    <div className="flex h-96 w-full items-center justify-center">
                                         <div
                                             key={`${sectionIndex}-${docIndex}`}
                                             className="flex h-full w-full items-center justify-center animate-[fadeIn_0.4s_ease-out]"

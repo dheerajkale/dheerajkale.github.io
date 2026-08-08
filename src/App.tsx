@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import Landing from './pages/Landing';
 import About from './pages/About';
 import Experience from './pages/Experience';

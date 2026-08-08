@@ -1,5 +1,6 @@
 import { FileText } from 'lucide-react';
 import type { Document } from '../../types/gallery';
+import { PdfPreview } from './PdfPreview';
 
 interface DocumentThumbnailProps {
   document: Document;
@@ -24,10 +25,7 @@ export function DocumentThumbnail({
         className="max-h-full max-w-full object-contain transition duration-300 group-hover:opacity-90"
       />
     ) : showMediaOnly ? (
-      <div className="flex flex-col items-center justify-center gap-2 text-black/40">
-        <FileText className="h-10 w-10" strokeWidth={1} />
-        <span className="text-sm">PDF</span>
-      </div>
+        <PdfPreview document={document} className="h-full w-full" />
     ) : (
       <div className="flex flex-col items-center justify-center gap-4 py-8 text-center">
         <FileText className="h-10 w-10 text-white/25" strokeWidth={1} />

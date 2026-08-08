@@ -36,21 +36,21 @@ export default function Contact() {
             <div className="flex gap-4">
                 <ContactChips
                     label="Email"
-                    href="mailto:hello@kale.com"
+                    href="mailto:dheerajkale@gmail.com"
                     icon={<ContactIcon icon={Mail} />}
                     iconBg="bg-black/10"
                     iconColor="text-black"
                 />
                 <ContactChips
                     label="Phone"
-                    href="tel:+91XXXXXXXXXX"
+                    href="tel:+919958944399"
                     icon={<ContactIcon icon={Phone} />}
                     iconBg="bg-black/10"
                     iconColor="text-black"
                 />
                 <ContactChips
                     label="LinkedIn"
-                    href="https://linkedin.com/in/yourprofile"
+                    href="https://www.linkedin.com/in/dheeraj-kale-99880227/"
                     icon={<ContactIcon icon={LinkedInIcon as unknown as LucideIcon} />}
                     iconBg="bg-black/10"
                     iconColor="text-black"

@@ -41,20 +41,20 @@
   scrollbar-width: none;
 }
 
-.profile-parallax-layer {
+.parallax-layer {
   position: absolute;
   pointer-events: none;
   will-change: transform;
 }
 
-.profile-texture-halftone {
+.texture-halftone {
   background-image:
     radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.45) 2px, transparent 2px),
     radial-gradient(circle at 70% 65%, rgba(0, 0, 0, 0.14) 1.5px, transparent 1.5px);
   background-size: 14px 14px, 10px 10px;
 }
 
-.profile-texture-stripes {
+.texture-stripes {
   background-image: repeating-linear-gradient(
     -18deg,
     transparent,
@@ -64,11 +64,33 @@
   );
 }
 
-.profile-texture-grain::after {
+.texture-grain::after {
   content: "";
   position: absolute;
   inset: 0;
   opacity: 0.35;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
+}
+
+@keyframes divider-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.divider-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: divider-marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .divider-marquee-track {
+    animation: none;
+  }
 }

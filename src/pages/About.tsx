@@ -1,9 +1,11 @@
 import ProfileImage from '../components/ProfileImage';
+import SectionBackground from '../components/SectionBackground';
 import profilePhoto from '../assets/about/profile.jpeg';
 
 export default function About() {
     return (
-        <div className="min-h-screen w-screen bg-white text-black flex flex-col items-center justify-center ">
+        <div className="relative min-h-screen w-screen bg-white text-black overflow-hidden flex flex-col items-center justify-center ">
+            <SectionBackground accents={['#cfcfcf', '#8a8a8a']} />
             <h1 className="text-4xl mb-8 lg:mb-3">Hi, I am Dheeraj</h1>
 
             <div className="flex flex-col lg:flex-row items-center justify-center text-lg max-w-10/12 mx-auto">

@@ -37,21 +37,21 @@ export default function ProfileImage({ src, alt }: ProfileImageProps) {
         >
             <div
                 aria-hidden
-                className="parallax-layer texture-halftone texture-grain -left-7 -top-5 z-0 h-[72%] w-[88%] bg-[#ff2d6a]"
+                className="parallax-layer texture-halftone texture-grain -left-7 -top-5 z-0 h-[72%] w-[88%] bg-[#5f5f5f]"
                 style={{
                     transform: `translate(${scrollOffset * 0.14}px, ${scrollOffset * 0.07}px) rotate(-3deg)`,
                 }}
             />
             <div
                 aria-hidden
-                className="parallax-layer texture-stripes texture-grain -right-8 -bottom-6 z-0 h-[78%] w-[82%] bg-[#00e8ff]"
+                className="parallax-layer texture-stripes texture-grain -right-8 -bottom-6 z-0 h-[78%] w-[82%] bg-[#d9d9d9]"
                 style={{
                     transform: `translate(${scrollOffset * -0.11}px, ${scrollOffset * 0.09}px) rotate(4deg)`,
                 }}
             />
             <div
                 aria-hidden
-                className="parallax-layer texture-halftone -left-3 bottom-2 z-0 h-[38%] w-[55%] bg-[#ffe600]"
+                className="parallax-layer texture-halftone -left-3 bottom-2 z-0 h-[38%] w-[55%] bg-[#9e9e9e]"
                 style={{
                     transform: `translate(${scrollOffset * 0.08}px, ${scrollOffset * -0.06}px) rotate(6deg)`,
                 }}

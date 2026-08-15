@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { DocumentPreview, DocumentViewer } from '../components/gallery/DocumentViewer';
 import { buildGalleryConfig } from '../utils/galleryConfig';
 import type { Document } from '../types/gallery';
+import SectionBackground from '../components/SectionBackground';
 
 const AUTO_CYCLE_MS = 5500;
 const galleryConfig = buildGalleryConfig();
@@ -102,9 +103,10 @@ export default function Gallery() {
   const viewerDocIndex = openDoc ? documents.findIndex((d) => d.src === openDoc.src) : -1;
 
   return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-white text-black">
+    <div className="relative min-h-screen w-screen bg-white text-black overflow-hidden flex flex-col items-center justify-center">
+      <SectionBackground accents={['#cfcfcf', '#8a8a8a']} />
       <header className="mb-16 text-center">
-        <h1 className="text-3xl">Gallery</h1>
+            <h1 className="text-4xl lg:text-5xl mb-10 lg:mb-14">Gallery</h1>
       </header>
 
       {!hasSections ? (

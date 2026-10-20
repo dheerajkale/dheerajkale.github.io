@@ -1,4 +1,5 @@
 import type { Document, DocumentType, GalleryConfig, GallerySection } from '../types/gallery';
+import { buildExperienceConfig } from './experienceConfig';
 import { parseMarkdown } from './parseMarkdown';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg']);
@@ -18,6 +19,7 @@ const markdownModules = import.meta.glob('../assets/gallery/**/*.md', {
 interface MarkdownMeta {
     title?: string;
     body: string;
+    frontmatter: Record<string, string>;
 }
 
 function pathFromModuleKey(key: string): string {
@@ -73,19 +75,69 @@ function enrichDocument(relativePath: string, doc: Document, markdownLookup: Map
 }
 
 function enrichSection(dir: string, section: GallerySection, markdownLookup: Map<string, MarkdownMeta>): GallerySection {
-    const sectionMeta = markdownLookup.get(`${dir}/${dir}.md`);
+    const sectionMeta =
+        markdownLookup.get(`${dir}/meta.md`) ?? markdownLookup.get(`${dir}/${dir}.md`);
 
     if (!sectionMeta) return section;
+
+    const orderValue = sectionMeta.frontmatter.order;
+    const order = orderValue !== undefined ? Number.parseFloat(orderValue) : undefined;
+    const experience = sectionMeta.frontmatter.experience;
 
     return {
         ...section,
         ...(sectionMeta.title !== undefined ? { title: sectionMeta.title } : {}),
         ...(sectionMeta.body ? { description: sectionMeta.body } : {}),
+        ...(experience !== undefined ? { experience } : {}),
+        ...(order !== undefined && Number.isFinite(order) ? { order } : {}),
     };
+}
+
+function buildExperienceOrder(): Map<string, number> {
+    const order = new Map<string, number>();
+
+    buildExperienceConfig().forEach((experience, index) => {
+        order.set(experience.id.toLowerCase(), index);
+        order.set(experience.title.toLowerCase(), index);
+    });
+
+    return order;
+}
+
+function sectionOrder(
+    section: GallerySection,
+    experienceOrder: Map<string, number>,
+): [number, number, string] {
+    const experienceIndex = section.experience
+        ? experienceOrder.get(section.experience.toLowerCase())
+        : undefined;
+
+    return [
+        experienceIndex ?? Number.MAX_SAFE_INTEGER,
+        section.order ?? Number.MAX_SAFE_INTEGER,
+        section.path,
+    ];
+}
+
+function compareSections(
+    a: GallerySection,
+    b: GallerySection,
+    experienceOrder: Map<string, number>,
+): number {
+    const [aExperience, aOrder, aPath] = sectionOrder(a, experienceOrder);
+    const [bExperience, bOrder, bPath] = sectionOrder(b, experienceOrder);
+
+    if (aExperience !== bExperience) return aExperience - bExperience;
+    if (a.documents.length !== b.documents.length) {
+        return b.documents.length - a.documents.length;
+    }
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return aPath.localeCompare(bPath);
 }
 
 export function buildGalleryConfig(): GalleryConfig {
     const markdownLookup = buildMarkdownLookup();
+    const experienceOrder = buildExperienceOrder();
     const sectionMap = new Map<string, { relativePath: string; doc: Document }[]>();
 
     for (const [key, url] of Object.entries(assetModules)) {
@@ -109,7 +161,6 @@ export function buildGalleryConfig(): GalleryConfig {
     }
 
     const sections: GallerySection[] = Array.from(sectionMap.entries())
-        .sort(([a], [b]) => a.localeCompare(b))
         .map(([dir, entries]) => {
             const section: GallerySection = {
                 title: sectionTitleFromDir(dir),
@@ -120,7 +171,8 @@ export function buildGalleryConfig(): GalleryConfig {
             };
 
             return enrichSection(dir, section, markdownLookup);
-        });
+        })
+        .sort((a, b) => compareSections(a, b, experienceOrder));
 
     return { sections };
 }

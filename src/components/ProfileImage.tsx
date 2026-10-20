@@ -31,38 +31,26 @@ export default function ProfileImage({ src, alt }: ProfileImageProps) {
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className="relative w-56 h-72 sm:w-64 sm:h-80"
-        >
+        <figure ref={containerRef} className="relative mx-auto w-full max-w-sm lg:mx-0">
             <div
                 aria-hidden
-                className="parallax-layer texture-halftone texture-grain -left-7 -top-5 z-0 h-[72%] w-[88%] bg-[#5f5f5f]"
-                style={{
-                    transform: `translate(${scrollOffset * 0.14}px, ${scrollOffset * 0.07}px) rotate(-3deg)`,
-                }}
+                className="parallax-layer texture-halftone -left-6 -top-6 h-[55%] w-[55%] bg-paper-deep opacity-70"
+                style={{ transform: `translateY(${scrollOffset * 0.04}px)` }}
             />
-            <div
-                aria-hidden
-                className="parallax-layer texture-stripes texture-grain -right-8 -bottom-6 z-0 h-[78%] w-[82%] bg-[#d9d9d9]"
-                style={{
-                    transform: `translate(${scrollOffset * -0.11}px, ${scrollOffset * 0.09}px) rotate(4deg)`,
-                }}
-            />
-            <div
-                aria-hidden
-                className="parallax-layer texture-halftone -left-3 bottom-2 z-0 h-[38%] w-[55%] bg-[#9e9e9e]"
-                style={{
-                    transform: `translate(${scrollOffset * 0.08}px, ${scrollOffset * -0.06}px) rotate(6deg)`,
-                }}
-            />
-            <div className="relative z-10 h-full w-full overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+            <div aria-hidden className="absolute inset-0 translate-x-4 translate-y-4 border border-ink/20" />
+
+            <div className="relative aspect-[4/5] overflow-hidden bg-paper-deep">
                 <img
                     src={src}
                     alt={alt}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover grayscale-[0.12] transition duration-700 hover:scale-[1.02] hover:grayscale-0"
                 />
             </div>
-        </div>
+
+            <figcaption className="mt-5 flex items-center justify-between border-t border-line pt-3 font-mono text-[0.58rem] uppercase tracking-[0.2em] text-muted">
+                <span>Dheeraj Kale</span>
+                <span>Portrait</span>
+            </figcaption>
+        </figure>
     );
 }

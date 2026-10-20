@@ -11,6 +11,8 @@ export interface GallerySection {
   title: string;
   path: string;
   description?: string;
+  experience?: string;
+  order?: number;
   documents: Document[];
 }
 

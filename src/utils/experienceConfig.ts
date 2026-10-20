@@ -18,14 +18,25 @@ function basename(path: string): string {
     return dot === -1 ? name : name.slice(0, dot);
 }
 
+function parseClients(raw: string | undefined): string[] {
+    if (!raw) return [];
+    return raw
+        .split(',')
+        .map((client) => client.trim())
+        .filter(Boolean);
+}
+
 function toExpItem(relativePath: string, raw: string): ExpItem {
     const parsed = parseMarkdown(raw);
     const { frontmatter } = parsed;
+    const clients = parseClients(frontmatter.clients);
 
     return {
+        id: basename(relativePath),
         title: parsed.title ?? basename(relativePath),
         company: frontmatter.company ?? '',
         ...(frontmatter.period !== undefined ? { period: frontmatter.period } : {}),
+        ...(clients.length > 0 ? { clients } : {}),
         ...(parsed.body ? { description: parsed.body } : {}),
     };
 }

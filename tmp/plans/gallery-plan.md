@@ -1,4 +1,4 @@
-# Gallery Page — Design Plan
+# Gallery Page - Design Plan
 
 ## Overview
 
@@ -95,33 +95,33 @@ const config: GalleryConfig = {
 ## Component Behavior
 
 ### Carousel Navigation (Section Level)
-- **Prev/Next buttons** — cycle through gallery sections
-- **Dot indicators** — show active section, clickable to jump
-- **Section count** — total number of sections visible
-- **Auto-advance** — when no document is open, cycle through documents in the active section every **5–6 seconds**
+- **Prev/Next buttons** - cycle through gallery sections
+- **Dot indicators** - show active section, clickable to jump
+- **Section count** - total number of sections visible
+- **Auto-advance** - when no document is open, cycle through documents in the active section every **5–6 seconds**
 
 ### Document Display (Grid)
-- **Layout** — 2-column grid: document image on left, description on right
-- **Image sizing** — `max-h-40` (16rem), `object-contain`
-- **PDF preview** — thumbnail/first-page preview with PDF icon
-- **Description column** — right column shows description in muted text
-- **Auto-cycle** — when viewer is closed, documents in the active section advance automatically (5–6s per document)
+- **Layout** - 2-column grid: document image on left, description on right
+- **Image sizing** - `max-h-40` (16rem), `object-contain`
+- **PDF preview** - thumbnail/first-page preview with PDF icon
+- **Description column** - right column shows description in muted text
+- **Auto-cycle** - when viewer is closed, documents in the active section advance automatically (5–6s per document)
 
 ### Auto-Cycle Controls
-- **Section-level button** — toggle auto-advance on/off for the active section
-- **Off state** — no auto-cycle, user manually clicks prev/next
-- **On state** — documents cycle every 5–6s in the active section
-- **Viewer is independent** — auto-cycle does NOT apply while the document viewer is open
+- **Section-level button** - toggle auto-advance on/off for the active section
+- **Off state** - no auto-cycle, user manually clicks prev/next
+- **On state** - documents cycle every 5–6s in the active section
+- **Viewer is independent** - auto-cycle does NOT apply while the document viewer is open
 
 ### Document Viewer (Overlay)
-- **Trigger** — click any document to open
-- **Overlay** — full-screen dark backdrop (`bg-black/70`)
-- **Layout** — 2-column: document (left, full-size) + description (right)
-- **Close** — click backdrop or × button
-- **Max height** — `90vh` with scroll
-- **PDF viewer** — inline `<iframe>` or `<embed>` for PDFs
-- **Auto-cycle off** — no auto-cycle while viewer is open (must use separate toggle button)
-- **Description persists** — description stays visible in the right column while cycling
+- **Trigger** - click any document to open
+- **Overlay** - full-screen dark backdrop (`bg-black/70`)
+- **Layout** - 2-column: document (left, full-size) + description (right)
+- **Close** - click backdrop or × button
+- **Max height** - `90vh` with scroll
+- **PDF viewer** - inline `<iframe>` or `<embed>` for PDFs
+- **Auto-cycle off** - no auto-cycle while viewer is open (must use separate toggle button)
+- **Description persists** - description stays visible in the right column while cycling
 
 ## Styling
 
@@ -145,14 +145,14 @@ const config: GalleryConfig = {
 
 ## Implementation Notes (Future)
 
-1. **Read from disk** — `fs/promises` to read `src/assets/gallery/*/` directory
-2. **Parse markdown** — read `<file>.md` for descriptions, strip frontmatter
-3. **Classify files** — split into `image/` and `pdf/` subdirectories
-4. **Build config** — convert filesystem structure into `GalleryConfig`
-5. **Mount config** — pass to component as props instead of hardcoded data
-6. **No React Router** — page is a sibling component in App.tsx
-7. **No CSS Modules** — all Tailwind utility classes inline
-8. **Vite build** — assets copied to `dist/`, paths resolved at build time
+1. **Read from disk** - `fs/promises` to read `src/assets/gallery/*/` directory
+2. **Parse markdown** - read `<file>.md` for descriptions, strip frontmatter
+3. **Classify files** - split into `image/` and `pdf/` subdirectories
+4. **Build config** - convert filesystem structure into `GalleryConfig`
+5. **Mount config** - pass to component as props instead of hardcoded data
+6. **No React Router** - page is a sibling component in App.tsx
+7. **No CSS Modules** - all Tailwind utility classes inline
+8. **Vite build** - assets copied to `dist/`, paths resolved at build time
 
 ## File Reading Strategy
 
@@ -173,9 +173,9 @@ const config: GalleryConfig = {
 - If no `.md` exists, description is empty
 
 ### File Classification
-- **Images** — `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif` → stored flat in `gallery/<section>/`
-- **PDFs** — `.pdf` → stored flat in `gallery/<section>/`
-- **Descriptions** — `<asset>.md` → stored flat alongside asset in `gallery/<section>/`
+- **Images** - `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif` → stored flat in `gallery/<section>/`
+- **PDFs** - `.pdf` → stored flat in `gallery/<section>/`
+- **Descriptions** - `<asset>.md` → stored flat alongside asset in `gallery/<section>/`
 
 ### Config Generation (future)
 ```typescript
@@ -219,16 +219,16 @@ async function readGalleryConfig(): Promise<GalleryConfig> {
 
 ### Preview in Grid
 - **PDFs** rendered as thumbnail preview (first page)
-- **Fallback** — if thumbnail unavailable, show PDF icon placeholder
-- **Icon** — use Lucide `FileText` or custom SVG PDF icon
-- **Label** — show file extension hint below thumbnail
+- **Fallback** - if thumbnail unavailable, show PDF icon placeholder
+- **Icon** - use Lucide `FileText` or custom SVG PDF icon
+- **Label** - show file extension hint below thumbnail
 
 ### PDF Viewer Overlay
-- **Renderer** — `<iframe>` with `src` for PDFs (lighter, no dependency)
-- **Alternative** — `<embed>` if iframe doesn't render in browser
-- **Fallback** — show download button if PDF viewer fails
-- **Styling** — `width: 100%; height: 100%` for full overlay
-- **Close** — × button or click backdrop to close
+- **Renderer** - `<iframe>` with `src` for PDFs (lighter, no dependency)
+- **Alternative** - `<embed>` if iframe doesn't render in browser
+- **Fallback** - show download button if PDF viewer fails
+- **Styling** - `width: 100%; height: 100%` for full overlay
+- **Close** - × button or click backdrop to close
 
 ### Browser Compatibility
 - PDFs supported in Chrome, Firefox, Safari, Edge

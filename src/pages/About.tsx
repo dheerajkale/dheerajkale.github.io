@@ -1,45 +1,75 @@
 import ProfileImage from '../components/ProfileImage';
-import SectionBackground from '../components/SectionBackground';
+import SectionLabel from '../components/SectionLabel';
 import profilePhoto from '../assets/about/profile.jpeg';
+
+const FACTS = [
+    { value: '30', label: 'Years of experience' },
+    { value: '06', label: 'Agencies & brands' },
+    { value: '04', label: 'Media disciplines' },
+];
 
 export default function About() {
     return (
-        <div className="relative min-h-screen w-screen bg-white text-black overflow-hidden flex flex-col items-center justify-center ">
-            <SectionBackground accents={['#cfcfcf', '#8a8a8a']} />
-            <h1 className="text-4xl mb-8 lg:mb-3">Hi, I am Dheeraj</h1>
+        <section
+            id="about"
+            className="w-full scroll-mt-16 px-5 py-24 sm:px-8 md:py-32 lg:px-12"
+        >
+            <div className="mx-auto w-full max-w-6xl">
+                <SectionLabel>About</SectionLabel>
 
-            <div className="flex flex-col lg:flex-row items-center justify-center text-lg max-w-10/12 mx-auto">
-                {/* Image section */}
-                <div className="flex items-center justify-center w-full lg:w-1/3 ">
-                    <ProfileImage
-                        src={profilePhoto}
-                        alt="Profile"
-                    />
+                <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:gap-16">
+                    <div className="min-w-0 lg:col-span-5">
+                        <ProfileImage src={profilePhoto} alt="Portrait of Dheeraj Kale" />
+                    </div>
+
+                    <div className="min-w-0 lg:col-span-7">
+                        <h1 className="max-w-2xl text-balance text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
+                            Hi, I am Dheeraj.
+                        </h1>
+
+                        <p className="mt-7 max-w-xl font-display text-2xl italic leading-snug text-muted sm:text-3xl">
+                            Creativity from advertising. Discipline from the corporate world.
+                        </p>
+
+                        <div className="mt-9 max-w-2xl space-y-5 text-base leading-relaxed text-muted sm:text-lg">
+                            <p className="dropcap text-ink/80">
+                                With nearly three decades of experience in Advertising and Corporate
+                                Communications, I bring a rare blend of creativity and professionalism to
+                                everything I do. My creativity stems from my advertising background, while
+                                years of navigating the corporate landscape have instilled in me a strong
+                                sense of professionalism, discipline, and strategic thinking.
+                            </p>
+
+                            <p>
+                                Over the course of my career, I have mastered the finer nuances of
+                                communication across Print, Digital, Outdoor, and Electronic Media. My journey
+                                has given me the opportunity to wear many hats - from Copywriting and Client
+                                Servicing to Media Planning, Vendor Liaison, Marketing Strategy, and Brand
+                                Building. Each role has enriched my perspective and strengthened my ability to
+                                deliver impactful communication solutions.
+                            </p>
+
+                            <p>
+                                Today, as a seasoned and versatile leader, I continue to embrace learning with
+                                the same enthusiasm that has driven me throughout my career. I believe that
+                                every new challenge presents an opportunity to grow, innovate, and create
+                                meaningful value.
+                            </p>
+                        </div>
+
+                        <dl className="mt-12 grid max-w-2xl grid-cols-3 gap-4 border-t border-line pt-6">
+                            {FACTS.map(({ value, label }) => (
+                                <div key={label}>
+                                    <dt className="font-mono text-[0.56rem] uppercase tracking-[0.18em] text-muted">
+                                        {label}
+                                    </dt>
+                                    <dd className="mt-2 font-display text-4xl leading-none">{value}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
                 </div>
-                {/* Text section */}
-                <div className="flex flex-col gap-3 lg:px-5 py-12 justify-center align-middle w-full lg:w-2/3 text-lg lg:max-w-9/12">
-                    <p>
-                        With nearly three decades of experience in Advertising and Corporate Communications,
-                        I bring a rare blend of creativity and professionalism to everything I do. My creativity stems from
-                        my advertising background, while years of navigating the corporate landscape have instilled in
-                        me a strong sense of professionalism, discipline, and strategic thinking.
-                    </p>
-
-                    <p>
-                        Over the course of my career, I have mastered the finer nuances of communication across Print,
-                        Digital, Outdoor, and Electronic Media. My journey has given me the opportunity to wear many hats—from
-                        Copywriting and Client Servicing to Media Planning, Vendor Liaison, Marketing Strategy, and Brand Building.
-                        Each role has enriched my perspective and strengthened my ability to deliver impactful communication solutions.
-                    </p>
-
-                    <p>
-                        Today, as a seasoned and versatile leader, I continue to embrace learning with the same enthusiasm
-                        that has driven me throughout my career. I believe that every new challenge presents an opportunity to grow, innovate,
-                        and create meaningful value.
-                    </p>
-                </div>
-
             </div>
-        </div>
+        </section>
     );
 }

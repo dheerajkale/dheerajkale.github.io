@@ -106,7 +106,7 @@ export default function Gallery() {
     <div className="relative min-h-screen w-screen bg-white text-black overflow-hidden flex flex-col items-center justify-center">
       <SectionBackground accents={['#cfcfcf', '#8a8a8a']} />
       <header className="mb-16 text-center">
-            <h1 className="text-4xl lg:text-5xl mb-10 lg:mb-14">Gallery</h1>
+        <h1 className="text-4xl lg:text-5xl mb-10 lg:mb-14">Gallery</h1>
       </header>
 
       {!hasSections ? (
